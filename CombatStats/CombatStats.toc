@@ -1,0 +1,8 @@
+## Title: CombatStats
+## Notes: More Details about your Characters Combats Stats
+## Version: 1.0
+## Author: David
+## Interface: 11305
+
+CombatStats.lua
+helper.lua

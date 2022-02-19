@@ -1,0 +1,7 @@
+## Title: Tiger Fury
+## Notes: Cast Tiger's Fury when needed
+## Version: 1.0
+## Author: David
+## Interface: 20503
+
+TigerFury.lua

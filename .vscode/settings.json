@@ -1,0 +1,9 @@
+{
+    "cmake.configureOnOpen": false,
+    "Lua.diagnostics.globals": [
+        "SlashCmdList",
+        "TargetFrameTextureFrame",
+        "TargetFrameHealthBarText",
+        "TargetFrameHealthBar"
+    ]
+}
