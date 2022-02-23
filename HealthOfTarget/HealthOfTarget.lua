@@ -35,10 +35,25 @@ player_dealt_damage_frame:RegisterEvent("UNIT_COMBAT")
 -- Function for UNIT COMBAT Event
 local function player_dealt_damage_event(self, event, ...)
     local target = ...
-    if event == 'UNIT_COMBAT' and target == 'target' then
+    if event == 'UNIT_COMBAT' and (target == 'target' or target == 'player') then
         TargetFrameHealthBarText:SetText(GetHealth())
     end
 end
 
 -- Set the script for the UNIT COMBAT Event
 player_dealt_damage_frame:SetScript("OnEvent", player_dealt_damage_event);
+
+-- Register the UNIT_HEALTH_FREQUENT Event
+local health_freq_frame = CreateFrame("Frame", "healthFreq")
+health_freq_frame:RegisterEvent("UNIT_HEALTH_FREQUENT")
+
+-- Function for the PLAYER_TARGET_CHANGED Event
+local function health_changed(self, event, ...)
+    local target = ...
+    if event == "UNIT_HEALTH_FREQUENT" and (target == 'player' or target == 'target') then
+        TargetFrameHealthBarText:SetText(GetHealth())
+    end
+end
+
+-- Set Script for the UNIT_HEALTH_FREQUENT Event
+health_freq_frame:SetScript("OnEvent", health_changed)
