@@ -179,7 +179,7 @@ ds_status_text:SetAlpha(1)
 ds_status_text:SetPoint("CENTER", 0, 0)
 ds_status_text.text = ds_status_text:CreateFontString(nil, "ARTWORK")
 ds_status_text.text:SetPoint("CENTER", 0, 0)
-ds_status_text.text:SetFont("Fonts\\ARIALN.ttf", 12, "OUTLINE")
+ds_status_text.text:SetFont("Fonts\\ARIALN.ttf", 13, "OUTLINE")
 ds_status_text:Hide()
 ds_status_text.text:SetText(total_equipment())
 
@@ -203,7 +203,7 @@ ds_container:SetMovable(true)
 ds_container:EnableMouse(true)
 ds_container:SetScript('OnEnter',
     function()
-        ds_status_text.text:SetText("Durability: " .. total_equipment() .. "%")
+        ds_status_text.text:SetText("Durability " .. total_equipment() .. "%")
         ds_status_text:Show()
     end
 )
