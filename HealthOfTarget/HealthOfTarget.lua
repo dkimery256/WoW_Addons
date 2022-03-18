@@ -1,6 +1,11 @@
 -- Get Health String
 local function GetHealth()
-    return UnitHealth('target') .. ' / ' .. UnitHealthMax('target')
+    local health = UnitHealth('target')
+    if (health > 0) then
+        return health .. ' / ' .. UnitHealthMax('target')
+    else
+        return ""
+    end
 end
 
 -- Health Text override
