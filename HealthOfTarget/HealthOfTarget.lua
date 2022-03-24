@@ -1,6 +1,10 @@
 -- Get Health String
 local function GetHealth()
     local health = UnitHealth('target')
+    if UnitIsPlayer("target") and not UnitInParty("target") then
+        return health .. "%"
+    end
+    local health = UnitHealth('target')
     if (health > 0) then
         return health .. ' / ' .. UnitHealthMax('target')
     else
