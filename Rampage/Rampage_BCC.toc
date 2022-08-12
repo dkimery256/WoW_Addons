@@ -1,0 +1,8 @@
+## Title: Rampage
+## Notes: Cast Rampage when needed
+## Version: 1.0
+## Author: David
+## Interface: 20504
+
+helper.lua
+Rampage.lua

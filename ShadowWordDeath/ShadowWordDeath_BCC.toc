@@ -1,0 +1,7 @@
+## Title: Shadow Word Death
+## Notes: Cast Shadow Word Death at optimal time
+## Version: 1.0
+## Author: David
+## Interface: 20504
+
+ShadowWordDeath.lua
