@@ -4,5 +4,6 @@
 ## Author: David
 ## Interface: 20504
 
-helper.lua
+Helper.lua
 WarriorBuffs.lua
+Commands.lua

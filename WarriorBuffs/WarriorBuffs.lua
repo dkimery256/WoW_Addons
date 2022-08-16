@@ -100,10 +100,10 @@ function EventFrame:ADDON_LOADED(name)
 end
 
 function GetStance()
-    local i,isActive,stance
+    local i,IsActive,stance
     for i = 1, GetNumShapeshiftForms() do
-        _,_,isActive = GetShapeshiftFormInfo(i)
-        if isActive then
+        _,_,IsActive = GetShapeshiftFormInfo(i)
+        if IsActive then
             stance = i
         end
     end
@@ -157,15 +157,15 @@ local function ShowOrHideRampageIcon()
     if GetStance() ~= 3 then
         rampage_icon_frame:Hide()
     end
-    if isActive(rampage_name) and IsUsableSpell(rampage_name) then
-        if buffTime(rampage_name) > 11 then
+    if IsActive(rampage_name) and IsUsableSpell(rampage_name) then
+        if BuffTime(rampage_name) > 11 then
             rampage_icon_frame:Hide()
         else
             rampage_icon_frame:Show()
         end
         return
     end
-    if not isActive(rampage_name) and IsUsableSpell(rampage_name) then
+    if not IsActive(rampage_name) and IsUsableSpell(rampage_name) then
         rampage_icon_frame:Show()
     else
         rampage_icon_frame:Hide()
@@ -182,15 +182,15 @@ local function ShowOrHideBattleShoutIcon()
         battle_shout_icon_frame:Hide()
         return
     end
-    if isActive(battle_shout_name) and IsUsableSpell(battle_shout_name) then
-        if buffTime(battle_shout_name) > 11 then
+    if IsActive(battle_shout_name) and IsUsableSpell(battle_shout_name) then
+        if BuffTime(battle_shout_name) > 11 then
             battle_shout_icon_frame:Hide()
         else
             battle_shout_icon_frame:Show()
         end
         return
     end
-    if not isActive(battle_shout_name) and IsUsableSpell(battle_shout_name) then
+    if not IsActive(battle_shout_name) and IsUsableSpell(battle_shout_name) then
         battle_shout_icon_frame:Show()
     else
         battle_shout_icon_frame:Hide()
@@ -207,11 +207,11 @@ local function ShowOrHideBloodrageIcon()
         bloodrage_icon_frame:Hide()
         return
     end
-    if isActive(bloodrage_name) then
+    if IsActive(bloodrage_name) then
         bloodrage_icon_frame:Hide()
         return
     end
-    if isOnCoolDown(bloodrage_name) then
+    if IsOnCoolDown(bloodrage_name) then
         bloodrage_icon_frame:Hide()
         return
     end
@@ -235,11 +235,11 @@ local function ShowOrHideBerserkerRageIcon()
         berserker_rage_icon_frame:Hide()
         return
     end
-    if isActive(berserker_rage_name) then
+    if IsActive(berserker_rage_name) then
         berserker_rage_icon_frame:Hide()
         return
     end
-    if isOnCoolDown(berserker_rage_name) then
+    if IsOnCoolDown(berserker_rage_name) then
         berserker_rage_icon_frame:Hide()
         return
     end
@@ -293,3 +293,103 @@ local function combat_ended(self, event, ...)
 end
 
 combat_ended_frame:SetScript("OnEvent", combat_ended)
+
+ns.WarriorBuffs = {}
+
+local function ShowAllIcons()
+    rampage_icon_frame:Show()
+    battle_shout_icon_frame:Show()
+    bloodrage_icon_frame:Show()
+    berserker_rage_icon_frame:Show()
+end
+
+local function HideAllIcons()
+    rampage_icon_frame:Hide()
+    battle_shout_icon_frame:Hide()
+    bloodrage_icon_frame:Hide()
+    berserker_rage_icon_frame:Hide()
+end
+
+local function Unlock()
+    ShowAllIcons()
+    rampage_icon_frame:SetMovable(true)
+    rampage_icon_frame:EnableMouse(true)
+    rampage_icon_frame:SetScript("OnMouseDown", function(self, button)
+        if button == "LeftButton" and not self.isMoving then
+            self:StartMoving();
+            self.isMoving = true;
+        end
+    end)
+    rampage_icon_frame:SetScript("OnMouseUp", function(self, button)
+        if button == "LeftButton" and self.isMoving then
+            self:StopMovingOrSizing();
+            self.isMoving = false;
+        end
+    end)
+    battle_shout_icon_frame:SetMovable(true)
+    battle_shout_icon_frame:EnableMouse(true)
+    battle_shout_icon_frame:SetScript("OnMouseDown", function(self, button)
+        if button == "LeftButton" and not self.isMoving then
+            self:StartMoving();
+            self.isMoving = true;
+        end
+    end)
+    battle_shout_icon_frame:SetScript("OnMouseUp", function(self, button)
+        if button == "LeftButton" and self.isMoving then
+            self:StopMovingOrSizing();
+            self.isMoving = false;
+        end
+    end)
+    bloodrage_icon_frame:SetMovable(true)
+    bloodrage_icon_frame:EnableMouse(true)
+    bloodrage_icon_frame:SetScript("OnMouseDown", function(self, button)
+        if button == "LeftButton" and not self.isMoving then
+            self:StartMoving();
+            self.isMoving = true;
+        end
+    end)
+    bloodrage_icon_frame:SetScript("OnMouseUp", function(self, button)
+        if button == "LeftButton" and self.isMoving then
+            self:StopMovingOrSizing();
+            self.isMoving = false;
+        end
+    end)
+    berserker_rage_icon_frame:SetMovable(true)
+    berserker_rage_icon_frame:EnableMouse(true)
+    berserker_rage_icon_frame:SetScript("OnMouseDown", function(self, button)
+        if button == "LeftButton" and not self.isMoving then
+            self:StartMoving();
+            self.isMoving = true;
+        end
+    end)
+    berserker_rage_icon_frame:SetScript("OnMouseUp", function(self, button)
+        if button == "LeftButton" and self.isMoving then
+            self:StopMovingOrSizing();
+            self.isMoving = false;
+        end
+    end)
+end
+
+local function Lock()
+    HideAllIcons()
+    rampage_icon_frame:SetMovable(false)
+    rampage_icon_frame:EnableMouse(false)
+    rampage_icon_frame:SetScript("OnMouseDown", nil)
+    rampage_icon_frame:SetScript("OnMouseUp", nil)
+    battle_shout_icon_frame:SetMovable(false)
+    battle_shout_icon_frame:EnableMouse(false)
+    battle_shout_icon_frame:SetScript("OnMouseDown", nil)
+    battle_shout_icon_frame:SetScript("OnMouseUp", nil)
+    bloodrage_icon_frame:SetMovable(false)
+    bloodrage_icon_frame:EnableMouse(false)
+    bloodrage_icon_frame:SetScript("OnMouseDown", nil)
+    bloodrage_icon_frame:SetScript("OnMouseUp", nil)
+    berserker_rage_icon_frame:SetMovable(false)
+    berserker_rage_icon_frame:EnableMouse(false)
+    berserker_rage_icon_frame:SetScript("OnMouseDown", nil)
+    berserker_rage_icon_frame:SetScript("OnMouseUp", nil)
+    
+end
+
+ns.WarriorBuffs.Unlock = Unlock
+ns.WarriorBuffs.Lock = Lock
