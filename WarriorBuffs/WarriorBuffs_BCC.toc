@@ -3,6 +3,8 @@
 ## Version: 1.0
 ## Author: David
 ## Interface: 20504
+## SavedVariables: AccountDB
+## SavedVariablesPerCharacter: CharacterDB
 
 Helper.lua
 WarriorBuffs.lua
