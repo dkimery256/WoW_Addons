@@ -5,19 +5,21 @@ local wba = WarriorBuffsAddon
 
 local rampageIconId = 0
 local rampageName = ""
-local rampageIconFrame = CreateFrame("Frame")
+local rampageIconFrame = CreateFrame("Frame", "rapmageIcon", UIParent)
 
 local battleShoutIconId = 0
 local battleShoutName = ""
-local battleShoutIconFrame = CreateFrame("Frame")
+local battleShoutIconFrame = CreateFrame("Frame", "battleShourIcon", UIParent)
 
 local bloodrageIconId = 0
 local bloodrageName = ""
-local bloodrageIconFrame = CreateFrame("Frame")
+local bloodrageIconFrame = CreateFrame("Frame", "bloodrageIcon", UIParent)
 
 local berserkerRageIconId = 0
 local berserkerRageName = ""
-local berserkerRageIconFrame = CreateFrame("Frame")
+local berserkerRageIconFrame = CreateFrame("Frame", "berserkerRageIcon", UIParent)
+
+local saveOnLogOff = false
 
 local addonLoadedFrame = CreateFrame('Frame')
 addonLoadedFrame:RegisterEvent('ADDON_LOADED')
@@ -32,9 +34,9 @@ function wba:ADDON_LOADED(name)
         rampageIconFrame:SetHeight(50)
         rampageIconFrame:SetWidth(50)
         rampageIconFrame:EnableMouse(true)
-        rampageIconFrame:SetPoint(CharacterDB.rampageIconPoint.point, CharacterDB.rampageIconPoint.ofsx, CharacterDB.rampageIconPoint.ofsy)
+        rampageIconFrame:SetPoint(CharacterDB.rampageIconPoint.point, UIParent, CharacterDB.rampageIconPoint.ofsx, CharacterDB.rampageIconPoint.ofsy)
         rampageIconFrame.icon = rampageIconFrame:CreateTexture(nil, "ARTWORK")
-        rampageIconFrame.icon:SetAllPoints()
+        rampageIconFrame.icon:SetAllPoints(true)
         rampageIconFrame.icon:SetTexture(rampageIconId)
         rampageIconFrame:SetScript("OnMouseDown", function (self, button)
             if button=='RightButton' then
@@ -49,9 +51,9 @@ function wba:ADDON_LOADED(name)
         battleShoutIconFrame:SetHeight(50)
         battleShoutIconFrame:SetWidth(50)
         battleShoutIconFrame:EnableMouse(true)
-        battleShoutIconFrame:SetPoint(CharacterDB.battleShoutIconPoint.point, CharacterDB.battleShoutIconPoint.ofsx, CharacterDB.battleShoutIconPoint.ofsy)
+        battleShoutIconFrame:SetPoint(CharacterDB.battleShoutIconPoint.point, UIParent, CharacterDB.battleShoutIconPoint.ofsx, CharacterDB.battleShoutIconPoint.ofsy)
         battleShoutIconFrame.icon = battleShoutIconFrame:CreateTexture(nil, "ARTWORK")
-        battleShoutIconFrame.icon:SetAllPoints()
+        battleShoutIconFrame.icon:SetAllPoints(true)
         battleShoutIconFrame.icon:SetTexture(battleShoutIconId)
         battleShoutIconFrame:SetScript("OnMouseDown", function (self, button)
             if button=='RightButton' then
@@ -66,9 +68,9 @@ function wba:ADDON_LOADED(name)
         bloodrageIconFrame:SetHeight(50)
         bloodrageIconFrame:SetWidth(50)
         bloodrageIconFrame:EnableMouse(true)
-        bloodrageIconFrame:SetPoint(CharacterDB.bloodrageIconPoint.point, CharacterDB.bloodrageIconPoint.ofsx, CharacterDB.bloodrageIconPoint.ofsy)
+        bloodrageIconFrame:SetPoint(CharacterDB.bloodrageIconPoint.point, UIParent, CharacterDB.bloodrageIconPoint.ofsx, CharacterDB.bloodrageIconPoint.ofsy)
         bloodrageIconFrame.icon = bloodrageIconFrame:CreateTexture(nil, "ARTWORK")
-        bloodrageIconFrame.icon:SetAllPoints()
+        bloodrageIconFrame.icon:SetAllPoints(true)
         bloodrageIconFrame.icon:SetTexture(bloodrageIconId)
         bloodrageIconFrame:SetScript("OnMouseDown", function (self, button)
             if button=='RightButton' then
@@ -83,9 +85,9 @@ function wba:ADDON_LOADED(name)
         berserkerRageIconFrame:SetHeight(50)
         berserkerRageIconFrame:SetWidth(50)
         berserkerRageIconFrame:EnableMouse(true)
-        berserkerRageIconFrame:SetPoint(CharacterDB.berserkerRageIconPoint.point, CharacterDB.berserkerRageIconPoint.ofsx, CharacterDB.berserkerRageIconPoint.ofsy)
+        berserkerRageIconFrame:SetPoint(CharacterDB.berserkerRageIconPoint.point, UIParent, CharacterDB.berserkerRageIconPoint.ofsx, CharacterDB.berserkerRageIconPoint.ofsy)
         berserkerRageIconFrame.icon = berserkerRageIconFrame:CreateTexture(nil, "ARTWORK")
-        berserkerRageIconFrame.icon:SetAllPoints()
+        berserkerRageIconFrame.icon:SetAllPoints(true)
         berserkerRageIconFrame.icon:SetTexture(berserkerRageIconId)
         berserkerRageIconFrame:SetScript("OnMouseDown", function (self, button)
             if button=='RightButton' then
@@ -108,7 +110,7 @@ logoutFrame:RegisterEvent("PLAYER_LOGOUT")
 logoutFrame:SetScript('OnEvent', function(self, event, ...) wba[event](wba, ...) end)
 
 function wba:PLAYER_LOGOUT()
-    --wba:Save() Not sure if I want this yet
+    if (CharacterDB.saveOnLogOff) then wba:Save() end
 end
 
 function wba:SetDefaults(reset)
@@ -134,8 +136,17 @@ function wba:SetDefaults(reset)
                 point = "CENTER",
                 ofsx = 0,
                 ofsy = 100
-            }
+            },
+            saveOnLogOff = saveOnLogOff
         }
+    else
+        saveOnLogOff = CharacterDB.saveOnLogOff
+    end
+    if reset then
+        rampageIconFrame:SetPoint(CharacterDB.rampageIconPoint.point, UIParent, CharacterDB.rampageIconPoint.ofsx, CharacterDB.rampageIconPoint.ofsy)
+        battleShoutIconFrame:SetPoint(CharacterDB.battleShoutIconPoint.point, UIParent, CharacterDB.battleShoutIconPoint.ofsx, CharacterDB.battleShoutIconPoint.ofsy)
+        bloodrageIconFrame:SetPoint(CharacterDB.bloodrageIconPoint.point, UIParent, CharacterDB.bloodrageIconPoint.ofsx, CharacterDB.bloodrageIconPoint.ofsy)
+        berserkerRageIconFrame:SetPoint(CharacterDB.berserkerRageIconPoint.point, UIParent, CharacterDB.berserkerRageIconPoint.ofsx, CharacterDB.berserkerRageIconPoint.ofsy)
     end
 end
 
@@ -294,9 +305,8 @@ local unitPowerFreqFrame = CreateFrame("Frame", "unitPowerFreqFrame")
 unitPowerFreqFrame:RegisterEvent("UNIT_POWER_FREQUENT")
 unitPowerFreqFrame:SetScript("OnEvent", function(self, event, ...) wba[event](wba, ...) end)
 
-function wba:unitPowerFreqEvent(self, event, ...)
-    local unit, type = ...
-    if event == 'UNITPOWERFREQUENT' and unit == 'player' and string.lower(type) == "rage" then
+function wba:UNIT_POWER_FREQUENT(unit, type)
+    if unit == 'player' and string.lower(type) == "rage" then
         wba:ShowOrHideBloodrageIcon()
         wba:ShowOrHideBerserkerRageIcon()
         wba:ShowOrHideBattleShoutIcon()
@@ -308,21 +318,18 @@ local playerDealtDamageFrame = CreateFrame("Frame", "playerDamage")
 playerDealtDamageFrame:RegisterEvent("UNIT_COMBAT")
 playerDealtDamageFrame:SetScript("OnEvent", function(self, event, ...) wba[event](wba, ...) end)
 
-function wba:playerDealtDamageEvent(self, event, ...)
-    local target = ...
-    if event == 'UNITCOMBAT' and (target == 'target' or target == 'player') then
-        wba:ShowOrHideRampageIcon()
-        wba:ShowOrHideBattleShoutIcon()
-        wba:ShowOrHideBloodrageIcon()
-        wba:ShowOrHideBerserkerRageIcon()
-    end
+function wba:UNIT_COMBAT()
+    wba:ShowOrHideRampageIcon()
+    wba:ShowOrHideBattleShoutIcon()
+    wba:ShowOrHideBloodrageIcon()
+    wba:ShowOrHideBerserkerRageIcon()
 end
 
 local combatEndedFrame = CreateFrame("Frame", "combatEnded")
 combatEndedFrame:RegisterEvent("PLAYER_LEAVE_COMBAT")
 combatEndedFrame:SetScript("OnEvent", function(self, event, ...) wba[event](wba, ...) end )
 
-function wba:combatEnded(self, event, ...)
+function wba:PLAYER_LEAVE_COMBAT()
     rampageIconFrame:Hide()
     battleShoutIconFrame:Hide()
     bloodrageIconFrame:Hide()
@@ -349,6 +356,8 @@ function wba:Save()
     CharacterDB.berserkerRageIconPoint.point = point
     CharacterDB.berserkerRageIconPoint.ofsx = ofsx
     CharacterDB.berserkerRageIconPoint.ofsy = ofsy
+
+    CharacterDB.saveOnLogOff = saveOnLogOff
 end
 
 function wba:ShowAllIcons()
@@ -449,8 +458,23 @@ function wba:Reset()
     wba:SetDefaults(true)
 end
 
+function wba:SetSaveOnLogOffFalse(solo)
+    saveOnLogOff = false
+end
+
+function wba:SetSaveOnLogOffTrue(solo)
+    saveOnLogOff = true
+end
+
+function wba:GetSaveOnLogOff()
+    print("Save on log off: " .. tostring(saveOnLogOff))
+end
+
 ns.WarriorBuffs = {}
 ns.WarriorBuffs.Unlock = wba.Unlock
 ns.WarriorBuffs.Lock = wba.Lock
 ns.WarriorBuffs.Save = wba.Save
 ns.WarriorBuffs.Reset = wba.Reset
+ns.WarriorBuffs.SetSaveOnLogOffTrue = wba.SetSaveOnLogOffTrue
+ns.WarriorBuffs.SetSaveOnLogOffFalse = wba.SetSaveOnLogOffFalse
+ns.WarriorBuffs.GetSaveOnLogOff = wba.GetSaveOnLogOff
