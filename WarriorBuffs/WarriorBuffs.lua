@@ -27,6 +27,8 @@ addonLoadedFrame:SetScript('OnEvent', function(self, event, ...) wba[event](wba,
 
 function wba:ADDON_LOADED(name)
     if name == addonName then
+        wba:SetDefaults()
+        
         rampageName, _, rampageIconId = GetSpellInfo('Rampage')
         rampageIconFrame:Hide()
         rampageIconFrame:SetFrameStrata("BACKGROUND")
@@ -151,10 +153,10 @@ function wba:SetDefaults(reset)
 end
 
 function wba:GetStance()
-    local IsActive, stance
+    local active, stance
     for i = 1, GetNumShapeshiftForms() do
-        _,_,IsActive = GetShapeshiftFormInfo(i)
-        if IsActive then
+        _,active = GetShapeshiftFormInfo(i)
+        if active then
             stance = i
         end
     end
@@ -207,6 +209,7 @@ function wba:ShowOrHideRampageIcon()
     end
     if wba:GetStance() ~= 3 then
         rampageIconFrame:Hide()
+        return
     end
     if wba:IsActive(rampageName) and IsUsableSpell(rampageName) then
         if wba:BuffTime(rampageName) > 11 then
@@ -280,6 +283,7 @@ function wba:ShowOrHideBerserkerRageIcon()
     end
     if wba:GetStance() ~= 3 then
         berserkerRageIconFrame:Hide()
+        return
     end
     local _, _, classId = UnitClass("player")
     if classId ~= 1 then

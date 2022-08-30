@@ -15,6 +15,17 @@ local function isActive()
     return false;
 end
 
+local function getForm()
+    local active, form = false, 0
+    for i = 1, GetNumShapeshiftForms() do
+        _,active = GetShapeshiftFormInfo(i)
+        if active then
+            form = i
+        end
+    end
+    return form
+end
+
 local icon_frame = CreateFrame("Frame")
 icon_frame:Hide()
 icon_frame:SetFrameStrata("BACKGROUND")
@@ -37,8 +48,12 @@ tiger_fury_frame:RegisterEvent("UNIT_POWER_FREQUENT")
 
 local function fire_tiger_fury_event(self, event, ...)
     local unit, type = ...
-    if event == 'UNIT_POWER_FREQUENT' and unit == 'player' and string.lower(type) == "energy" then
+    if event == 'UNIT_POWER_FREQUENT' and unit == 'player' then
         if isActive() then
+            icon_frame:Hide()
+            return
+        end
+        if getForm() ~= 3 then
             icon_frame:Hide()
             return
         end
@@ -50,9 +65,8 @@ local function fire_tiger_fury_event(self, event, ...)
         if class_id ~= 11 then
             icon_frame:Hide()
             return
-        end  
-        local energy = UnitPower('player', 3)
-        if energy > 65 then
+        end
+        if UnitPower('player', 3) > 65 then
             icon_frame:Show()
         else
             icon_frame:Hide()
