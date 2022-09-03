@@ -1,8 +1,11 @@
 -- Get Health String
+
 local function GetHealth()
     local health = UnitHealth('target')
+    local playerName = UnitName("player")
+    local targetName = UnitName("target")
     if UnitIsPlayer("target") and not UnitInParty("target") then
-        return health .. "%"
+        if (playerName ~= targetName) then return health .. "%" end    
     end
     local health = UnitHealth('target')
     if (health > 0) then

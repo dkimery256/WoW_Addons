@@ -2,6 +2,6 @@
 ## Notes: Cast Tiger's Fury when needed
 ## Version: 1.0
 ## Author: David
-## Interface: 20504
+## Interface: 30400
 
 TigerFury.lua

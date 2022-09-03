@@ -66,7 +66,7 @@ local function fire_tiger_fury_event(self, event, ...)
             icon_frame:Hide()
             return
         end
-        if UnitPower('player', 3) > 65 then
+        if IsUsableSpell(tiger_fury_spell_name) then
             icon_frame:Show()
         else
             icon_frame:Hide()

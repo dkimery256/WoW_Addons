@@ -2,7 +2,7 @@
 ## Notes: More Details about your Characters Combats Stats
 ## Version: 1.0
 ## Author: David
-## Interface: 20504
+## Interface: 30400
 
 CombatStats.lua
 helper.lua
