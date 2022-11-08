@@ -1,32 +1,5 @@
 local addon_name, ns = ...
 
--- Inventory Slots
-local inventorySlotConstants = {
-	INVSLOT_HEAD,
-	INVSLOT_SHOULDER,
-	INVSLOT_CHEST,
-	INVSLOT_WAIST,
-	INVSLOT_LEGS,
-	INVSLOT_FEET,
-	INVSLOT_WRIST,
-	INVSLOT_HAND,
-	INVSLOT_MAINHAND,
-	INVSLOT_OFFHAND
-}
-
-local inventorySlotNames = {
-    'Head',
-    'Shoulder',
-    'Chest',
-    'Waist',
-    'Legs',
-    'Feet',
-    'Wrist',
-    'Hands',
-    'Main Hand',
-    'Off Hand'
-}
-
 -- Colorize Chat base off of our msg and percent values
 local function colorize_chat(msg, percent)
     if percent == 'N/A' then
@@ -61,94 +34,62 @@ local function colorize_bar(bar, percent)
     end
 end
 
--- Get the total percentage of all your equipment
-local function total_equipment(toChat)
-    toChat = toChat or false
-    local curTotal = 0
-    local maxTotal = 0
-
-    for key, value in pairs(inventorySlotConstants) do
-        local current, maximum = GetInventoryItemDurability(value)
-        if current ~= nil then
-            curTotal = curTotal + current
-            maxTotal = maxTotal + maximum
-        end
-    end
-    if toChat then
-        colorize_chat("All Slots", ns.math_helper.percent(curTotal, maxTotal))
-        return
-    end
-    return ns.math_helper.percent(curTotal, maxTotal)
-end
-
-local function single_slot(index)
-    local slot = inventorySlotConstants[index]
-    local curr, max = GetInventoryItemDurability(slot)
-    local percent
-    if curr ~= nil then
-        percent = ns.math_helper.percent(curr, max)
-    else
-        percent = 'N/A'
-    end
-    colorize_chat(inventorySlotNames[index] .. ' Slot', percent)
-end
-
 -- Lets start with slash commands for testing
 local function durabilityStats(msg, editbox)
     msg = string.lower(msg)
     -- Total
     if msg == '-t' or msg == 'total' then
-	    total_equipment(true)
+        colorize_chat("All Slots", ns.Inventory:GetAllItemsDurabilityPercent())
     end
 
     -- Head
-    if msg == '-hd' or msg == 'head' then
-        single_slot(1)
+    if msg == '-hd' or msg == 'head' or 'all' then
+        colorize_chat(ns.Inventory.Head:GetItemName(), ns.Inventory.Head:GetDurabilityPercent())
     end
 
     -- Shoulders
-    if msg == '-s' or msg == 'shoulders' then
-        single_slot(2)
+    if msg == '-s' or msg == 'shoulders' or 'all' then
+        colorize_chat(ns.Inventory.Shoulders:GetItemName(), ns.Inventory.Shoulders:GetDurabilityPercent())
     end
 
     -- Chest
-    if msg == '-c' or msg == 'chest' then
-        single_slot(3)
+    if msg == '-c' or msg == 'chest' or 'all' then
+        colorize_chat(ns.Inventory.Chest:GetItemName(), ns.Inventory.Chest:GetDurabilityPercent())
     end
 
     -- Waist
-    if msg == '-wat' or msg == 'waist' then
-        single_slot(4)
+    if msg == '-wat' or msg == 'waist' or 'all' then
+        colorize_chat(ns.Inventory.Waist:GetItemName(), ns.Inventory.Waist:GetDurabilityPercent())
     end
 
     -- Legs
-    if msg == '-l' or msg == 'legs' then
-        single_slot(5)
+    if msg == '-l' or msg == 'legs' or 'all' then
+        colorize_chat(ns.Inventory.Legs:GetItemName(), ns.Inventory.Legs:GetDurabilityPercent())
     end
 
     -- Feet
-    if msg == '-f' or msg == 'feet' then
-        single_slot(6)
+    if msg == '-f' or msg == 'feet' or 'all' then
+        colorize_chat(ns.Inventory.Feet:GetItemName(), ns.Inventory.Feet:GetDurabilityPercent())
     end
 
     -- Wrist
-    if msg == '-wrt' or msg == 'wrist' then
-        single_slot(7)
+    if msg == '-wrt' or msg == 'wrist' or 'all' then
+        colorize_chat(ns.Inventory.Wrist:GetItemName(), ns.Inventory.Wrist:GetDurabilityPercent())
     end
 
     -- Hands
-    if msg == '-hds' or msg == 'hands' then
-        single_slot(8)
+    if msg == '-hds' or msg == 'hands' or 'all' then
+        colorize_chat(ns.Inventory.Hands:GetItemName(), ns.Inventory.Hands:GetDurabilityPercent())
     end
 
     -- Main Hand
-    if msg == '-m' or msg == 'main' then
-        single_slot(9)
+    if msg == '-m' or msg == 'main' or 'all' then
+        colorize_chat(ns.Inventory.MainHand:GetItemName(), ns.Inventory.MainHand:GetDurabilityPercent())
     end
 
     -- Off Hand
-    if msg == '-o' or msg == 'off' then
-        single_slot(10)
+    if msg == '-o' or msg == 'off' or 'all' then
+        colorize_chat(ns.Inventory.OffHand:GetItemName(), ns.Inventory.OffHand:GetDurabilityPercent())
     end
 end
 
@@ -181,12 +122,12 @@ ds_status_text.text = ds_status_text:CreateFontString(nil, "ARTWORK")
 ds_status_text.text:SetPoint("CENTER", 0, 0)
 ds_status_text.text:SetFont("Fonts\\ARIALN.ttf", 13, "OUTLINE")
 ds_status_text:Hide()
-ds_status_text.text:SetText(total_equipment())
+ds_status_text.text:SetText(ns.Inventory:GetAllItemsDurabilityPercent())
 
 -- Frame for our durability status bar
 local ds_status_bar = CreateFrame("Frame", "ds_status_bar", ds_container)
 ds_container:SetFrameStrata("HIGH")
-ds_status_bar:SetWidth(ns.math_helper.percentage_of(total_equipment(), 85))
+ds_status_bar:SetWidth(ns.math_helper.percentage_of(ns.Inventory:GetAllItemsDurabilityPercent(), 85))
 ds_status_bar:SetHeight(12)
 ds_status_bar:SetPoint("LEFT",0, 0)
 ds_status_bar:Show()
@@ -195,7 +136,7 @@ ds_status_bar:Show()
 local ds_status_bar_background = ds_status_bar:CreateTexture("ds_status_bar_background", "BACKGROUND")
 ds_status_bar_background:SetAllPoints(ds_status_bar)
 ds_status_bar_background.texture = ds_container_background
-colorize_bar(ds_status_bar_background, total_equipment())
+colorize_bar(ds_status_bar_background, ns.Inventory:GetAllItemsDurabilityPercent())
 
 -- Show Text on mouse over
 -- Also, we need to be able to move the bar
@@ -203,7 +144,7 @@ ds_container:SetMovable(true)
 ds_container:EnableMouse(true)
 ds_container:SetScript('OnEnter',
     function()
-        ds_status_text.text:SetText("Durability " .. total_equipment() .. "%")
+        ds_status_text.text:SetText("Durability " .. ns.Inventory:GetAllItemsDurabilityPercent() .. "%")
         ds_status_text:Show()
     end
 )
@@ -229,31 +170,14 @@ player_damage_frame:RegisterEvent("UNIT_COMBAT")
 local function player_took_damage_event(self, event, ...)
     local target = ...
     if event == 'UNIT_COMBAT' and target == 'player' then
-        ds_status_text.text:SetText(total_equipment())
-        colorize_bar(ds_status_bar_background, total_equipment())
-        ds_status_bar:SetWidth(ns.math_helper.percentage_of(total_equipment(), 85))
+        ds_status_text.text:SetText(ns.Inventory:GetAllItemsDurabilityPercent())
+        colorize_bar(ds_status_bar_background, ns.Inventory:GetAllItemsDurabilityPercent())
+        ds_status_bar:SetWidth(ns.math_helper.percentage_of(ns.Inventory:GetAllItemsDurabilityPercent(), 85))
     end
 end
 
 -- Set the script for the UNIT COMBAT Event
 player_damage_frame:SetScript("OnEvent", player_took_damage_event);
-
---[[ Register MERCHANT CLOSED Event
-local player_left_merchant_frame = CreateFrame("Frame", "playerLeftMerchant")
-player_left_merchant_frame:RegisterEvent("MERCHANT_CLOSED")
-
--- Function for MERCHANT CLOSED Event
-local function player_left_merchant_event(self, event, ...)
-    if event == 'MERCHANT_CLOSED' then
-        ds_status_text.text:SetText(total_equipment())
-        colorize_bar(ds_status_bar_background, total_equipment())
-        ds_status_bar:SetWidth(ns.math_helper.percentage_of(total_equipment(), 85))
-    end
-end
-
--- Set the script for the MERCHANT CLOSED Event
-player_left_merchant_frame:SetScript("OnEvent", player_left_merchant_event);
-]]
 
 -- Register UPDATE_INVENTORY_DURABILITY Event
 local update_inventory_durability_frame = CreateFrame("Frame", "update_inventory_durability")
@@ -263,9 +187,9 @@ update_inventory_durability_frame:RegisterEvent("UPDATE_INVENTORY_DURABILITY")
 local function update_inventory_durability_event(self, event, ...)
     local target = ...
     if event == 'UPDATE_INVENTORY_DURABILITY' then
-        ds_status_text.text:SetText(total_equipment())
-        colorize_bar(ds_status_bar_background, total_equipment())
-        ds_status_bar:SetWidth(ns.math_helper.percentage_of(total_equipment(), 85))
+        ds_status_text.text:SetText(ns.Inventory:GetAllItemsDurabilityPercent())
+        colorize_bar(ds_status_bar_background, ns.Inventory:GetAllItemsDurabilityPercent())
+        ds_status_bar:SetWidth(ns.math_helper.percentage_of(ns.Inventory:GetAllItemsDurabilityPercent(), 85))
     end
 end
 
@@ -279,9 +203,9 @@ player_bag_update_frame:RegisterEvent("BAG_UPDATE")
 -- Function for BAG UPDATE Event
 local function player_bag_update_event(self, event, ...)
     if event == 'BAG_UPDATE' then
-        ds_status_text.text:SetText(total_equipment())
-        colorize_bar(ds_status_bar_background, total_equipment())
-        ds_status_bar:SetWidth(ns.math_helper.percentage_of(total_equipment(), 85))
+        ds_status_text.text:SetText(ns.Inventory:GetAllItemsDurabilityPercent())
+        colorize_bar(ds_status_bar_background, ns.Inventory:GetAllItemsDurabilityPercent())
+        ds_status_bar:SetWidth(ns.math_helper.percentage_of(ns.Inventory:GetAllItemsDurabilityPercent(), 85))
     end
 end
 

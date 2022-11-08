@@ -5,4 +5,5 @@
 ## Interface: 30400
 
 math_helper.lua
+Inventory.lua
 DurabilityStats.lua

@@ -3,9 +3,9 @@ local addonName, ns = ...
 WarriorBuffsAddon = {}
 local wba = WarriorBuffsAddon
 
-local rampageIconId = 0
-local rampageName = ""
-local rampageIconFrame = CreateFrame("Frame", "rapmageIcon", UIParent)
+local bloodsurgeId = 0
+local bloodsurgeName = ""
+local bloodsurgeIconFrame = CreateFrame("Frame", "bloodsurgeIcon", UIParent)
 
 local battleShoutIconId = 0
 local battleShoutName = ""
@@ -28,21 +28,21 @@ addonLoadedFrame:SetScript('OnEvent', function(self, event, ...) wba[event](wba,
 function wba:ADDON_LOADED(name)
     if name == addonName then
         wba:SetDefaults()
-        
-        rampageName, _, rampageIconId = GetSpellInfo('Rampage')
-        rampageIconFrame:Hide()
-        rampageIconFrame:SetFrameStrata("BACKGROUND")
-        rampageIconFrame:SetParent(UIParent)
-        rampageIconFrame:SetHeight(50)
-        rampageIconFrame:SetWidth(50)
-        rampageIconFrame:EnableMouse(true)
-        rampageIconFrame:SetPoint(CharacterDB.rampageIconPoint.point, UIParent, CharacterDB.rampageIconPoint.ofsx, CharacterDB.rampageIconPoint.ofsy)
-        rampageIconFrame.icon = rampageIconFrame:CreateTexture(nil, "ARTWORK")
-        rampageIconFrame.icon:SetAllPoints(true)
-        rampageIconFrame.icon:SetTexture(rampageIconId)
-        rampageIconFrame:SetScript("OnMouseDown", function (self, button)
+       
+        bloodsurgeName, bloodsurgeId = GetTalentInfo(2,23)
+        bloodsurgeIconFrame:Hide()
+        bloodsurgeIconFrame:SetFrameStrata("BACKGROUND")
+        bloodsurgeIconFrame:SetParent(UIParent)
+        bloodsurgeIconFrame:SetHeight(50)
+        bloodsurgeIconFrame:SetWidth(50)
+        bloodsurgeIconFrame:EnableMouse(true)
+        bloodsurgeIconFrame:SetPoint(CharacterDB.bloodsurgeIconPoint.point, UIParent, CharacterDB.bloodsurgeIconPoint.ofsx, CharacterDB.bloodsurgeIconPoint.ofsy)
+        bloodsurgeIconFrame.icon = bloodsurgeIconFrame:CreateTexture(nil, "ARTWORK")
+        bloodsurgeIconFrame.icon:SetAllPoints(true)
+        bloodsurgeIconFrame.icon:SetTexture(bloodsurgeId)
+        bloodsurgeIconFrame:SetScript("OnMouseDown", function (self, button)
             if button=='RightButton' then
-                rampageIconFrame:Hide()
+                bloodsurgeIconFrame:Hide()
             end
         end)
 
@@ -119,7 +119,7 @@ function wba:SetDefaults(reset)
     if not (type(reset) == "boolean") then reset = false end
     if CharacterDB == nil or reset then
         CharacterDB = {
-            rampageIconPoint = {
+            bloodsurgeIconPoint = {
                 point = "CENTER",
                 ofsx = 0,
                 ofsy = 100
@@ -145,7 +145,7 @@ function wba:SetDefaults(reset)
         saveOnLogOff = CharacterDB.saveOnLogOff
     end
     if reset then
-        rampageIconFrame:SetPoint(CharacterDB.rampageIconPoint.point, UIParent, CharacterDB.rampageIconPoint.ofsx, CharacterDB.rampageIconPoint.ofsy)
+        bloodsurgeIconFrame:SetPoint(CharacterDB.bloodsurgeIconPoint.point, UIParent, CharacterDB.bloodsurgeIconPoint.ofsx, CharacterDB.bloodsurgeIconPoint.ofsy)
         battleShoutIconFrame:SetPoint(CharacterDB.battleShoutIconPoint.point, UIParent, CharacterDB.battleShoutIconPoint.ofsx, CharacterDB.battleShoutIconPoint.ofsy)
         bloodrageIconFrame:SetPoint(CharacterDB.bloodrageIconPoint.point, UIParent, CharacterDB.bloodrageIconPoint.ofsx, CharacterDB.bloodrageIconPoint.ofsy)
         berserkerRageIconFrame:SetPoint(CharacterDB.berserkerRageIconPoint.point, UIParent, CharacterDB.berserkerRageIconPoint.ofsx, CharacterDB.berserkerRageIconPoint.ofsy)
@@ -197,32 +197,23 @@ function wba:IsOnCoolDown(name)
     return false
 end
 
-function wba:ShowOrHideRampageIcon()
+function wba:ShowOrHideBloodsurgeIcon()
     if not UnitAffectingCombat("player") then
-        rampageIconFrame:Hide()
+        bloodsurgeIconFrame:Hide()
         return
     end
     local _, _, classId = UnitClass("player")
     if classId ~= 1 then
-        rampageIconFrame:Hide()
+        bloodsurgeIconFrame:Hide()
         return
     end
     if wba:GetStance() ~= 3 then
-        rampageIconFrame:Hide()
+        bloodsurgeIconFrame:Hide()
         return
     end
-    if wba:IsActive(rampageName) and IsUsableSpell(rampageName) then
-        if wba:BuffTime(rampageName) > 11 then
-            rampageIconFrame:Hide()
-        else
-            rampageIconFrame:Show()
-        end
+    if wba:IsActive("Slam!") and IsUsableSpell("Slam") then
+        bloodsurgeIconFrame:Show()
         return
-    end
-    if not wba:IsActive(rampageName) and IsUsableSpell(rampageName) then
-        rampageIconFrame:Show()
-    else
-        rampageIconFrame:Hide()
     end
 end
 
@@ -314,7 +305,7 @@ function wba:UNIT_POWER_FREQUENT(unit, type)
         wba:ShowOrHideBloodrageIcon()
         wba:ShowOrHideBerserkerRageIcon()
         wba:ShowOrHideBattleShoutIcon()
-        wba:ShowOrHideRampageIcon()
+        wba:ShowOrHideBloodsurgeIcon()
     end
 end
 
@@ -323,7 +314,7 @@ playerDealtDamageFrame:RegisterEvent("UNIT_COMBAT")
 playerDealtDamageFrame:SetScript("OnEvent", function(self, event, ...) wba[event](wba, ...) end)
 
 function wba:UNIT_COMBAT()
-    wba:ShowOrHideRampageIcon()
+    wba:ShowOrHideBloodsurgeIcon()
     wba:ShowOrHideBattleShoutIcon()
     wba:ShowOrHideBloodrageIcon()
     wba:ShowOrHideBerserkerRageIcon()
@@ -334,17 +325,17 @@ combatEndedFrame:RegisterEvent("PLAYER_LEAVE_COMBAT")
 combatEndedFrame:SetScript("OnEvent", function(self, event, ...) wba[event](wba, ...) end )
 
 function wba:PLAYER_LEAVE_COMBAT()
-    rampageIconFrame:Hide()
+    bloodsurgeIconFrame:Hide()
     battleShoutIconFrame:Hide()
     bloodrageIconFrame:Hide()
     berserkerRageIconFrame:Hide()
 end
 
 function wba:Save()
-    local point, _, _, ofsx, ofsy = rampageIconFrame:GetPoint()
-    CharacterDB.rampageIconPoint.point = point
-    CharacterDB.rampageIconPoint.ofsx = ofsx
-    CharacterDB.rampageIconPoint.ofsy = ofsy
+    local point, _, _, ofsx, ofsy = bloodsurgeIconFrame:GetPoint()
+    CharacterDB.bloodsurgeIconPoint.point = point
+    CharacterDB.bloodsurgeIconPoint.ofsx = ofsx
+    CharacterDB.bloodsurgeIconPoint.ofsy = ofsy
 
     point, _, _, ofsx, ofsy = battleShoutIconFrame:GetPoint()
     CharacterDB.battleShoutIconPoint.point = point
@@ -365,14 +356,14 @@ function wba:Save()
 end
 
 function wba:ShowAllIcons()
-    rampageIconFrame:Show()
+    bloodsurgeIconFrame:Show()
     battleShoutIconFrame:Show()
     bloodrageIconFrame:Show()
     berserkerRageIconFrame:Show()
 end
 
 function wba:HideAllIcons()
-    rampageIconFrame:Hide()
+    bloodsurgeIconFrame:Hide()
     battleShoutIconFrame:Hide()
     bloodrageIconFrame:Hide()
     berserkerRageIconFrame:Hide()
@@ -380,15 +371,15 @@ end
 
 function wba:Unlock()
     wba:ShowAllIcons()
-    rampageIconFrame:SetMovable(true)
-    rampageIconFrame:EnableMouse(true)
-    rampageIconFrame:SetScript("OnMouseDown", function(self, button)
+    bloodsurgeIconFrame:SetMovable(true)
+    bloodsurgeIconFrame:EnableMouse(true)
+    bloodsurgeIconFrame:SetScript("OnMouseDown", function(self, button)
         if button == "LeftButton" and not self.isMoving then
             self:StartMoving();
             self.isMoving = true;
         end
     end)
-    rampageIconFrame:SetScript("OnMouseUp", function(self, button)
+    bloodsurgeIconFrame:SetScript("OnMouseUp", function(self, button)
         if button == "LeftButton" and self.isMoving then
             self:StopMovingOrSizing();
             self.isMoving = false;
@@ -440,10 +431,10 @@ end
 
 function wba:Lock()
     wba:HideAllIcons()
-    rampageIconFrame:SetMovable(false)
-    rampageIconFrame:EnableMouse(false)
-    rampageIconFrame:SetScript("OnMouseDown", nil)
-    rampageIconFrame:SetScript("OnMouseUp", nil)
+    bloodsurgeIconFrame:SetMovable(false)
+    bloodsurgeIconFrame:EnableMouse(false)
+    bloodsurgeIconFrame:SetScript("OnMouseDown", nil)
+    bloodsurgeIconFrame:SetScript("OnMouseUp", nil)
     battleShoutIconFrame:SetMovable(false)
     battleShoutIconFrame:EnableMouse(false)
     battleShoutIconFrame:SetScript("OnMouseDown", nil)
