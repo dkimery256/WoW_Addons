@@ -30,6 +30,7 @@ function wba:ADDON_LOADED(name)
         wba:SetDefaults()
        
         bloodsurgeName, bloodsurgeId = GetTalentInfo(2,23)
+        bloodsurgeName = "Slam" -- Talent Name differs from Skill it effects
         bloodsurgeIconFrame:Hide()
         bloodsurgeIconFrame:SetFrameStrata("BACKGROUND")
         bloodsurgeIconFrame:SetParent(UIParent)
@@ -211,7 +212,7 @@ function wba:ShowOrHideBloodsurgeIcon()
         bloodsurgeIconFrame:Hide()
         return
     end
-    if wba:IsActive("Slam!") and IsUsableSpell("Slam") then
+    if wba:IsActive(bloodsurgeName.."!") and IsUsableSpell(bloodsurgeName) then
         bloodsurgeIconFrame:Show()
         return
     end
