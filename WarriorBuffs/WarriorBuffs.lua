@@ -19,6 +19,10 @@ local berserkerRageIconId = 0
 local berserkerRageName = ""
 local berserkerRageIconFrame = CreateFrame("Frame", "berserkerRageIcon", UIParent)
 
+local victoryRushIconId = 0
+local victoryRushName = ""
+local victoryRushIconFrame = CreateFrame("Frame", "victoryRushIcon", UIParent)
+
 local saveOnLogOff = false
 
 local addonLoadedFrame = CreateFrame('Frame')
@@ -97,6 +101,23 @@ function wba:ADDON_LOADED(name)
                 berserkerRageIconFrame:Hide()
             end
         end)
+
+        victoryRushName, _, victoryRushIconId = GetSpellInfo("Victory Rush")
+        victoryRushIconFrame:Hide()
+        victoryRushIconFrame:SetFrameStrata("BACKGROUND")
+        victoryRushIconFrame:SetParent(UIParent)
+        victoryRushIconFrame:SetHeight(50)
+        victoryRushIconFrame:SetWidth(50)
+        victoryRushIconFrame:EnableMouse(true)
+        victoryRushIconFrame:SetPoint(CharacterDB.victoryRushIconPoint.point, UIParent, CharacterDB.victoryRushIconPoint.ofsx, CharacterDB.victoryRushIconPoint.ofsy)
+        victoryRushIconFrame.icon = victoryRushIconFrame:CreateTexture(nil, "ARTWORK")
+        victoryRushIconFrame.icon:SetAllPoints(true)
+        victoryRushIconFrame.icon:SetTexture(victoryRushIconId)
+        victoryRushIconFrame:SetScript("OnMouseDown", function (self, button)
+            if button=='RightButton' then
+                victoryRushIconFrame:Hide()
+            end
+        end)
     end
 end
 
@@ -140,6 +161,11 @@ function wba:SetDefaults(reset)
                 ofsx = 0,
                 ofsy = 100
             },
+            victoryRushIconPoint = {
+                point = "CENTER",
+                ofsx = 0,
+                ofsy = 100
+            },
             saveOnLogOff = saveOnLogOff
         }
     else
@@ -150,6 +176,7 @@ function wba:SetDefaults(reset)
         battleShoutIconFrame:SetPoint(CharacterDB.battleShoutIconPoint.point, UIParent, CharacterDB.battleShoutIconPoint.ofsx, CharacterDB.battleShoutIconPoint.ofsy)
         bloodrageIconFrame:SetPoint(CharacterDB.bloodrageIconPoint.point, UIParent, CharacterDB.bloodrageIconPoint.ofsx, CharacterDB.bloodrageIconPoint.ofsy)
         berserkerRageIconFrame:SetPoint(CharacterDB.berserkerRageIconPoint.point, UIParent, CharacterDB.berserkerRageIconPoint.ofsx, CharacterDB.berserkerRageIconPoint.ofsy)
+        victoryRushIconFrame:SetPoint(CharacterDB.victoryRushIconPoint.point, UIParent, CharacterDB.victoryRushIconPoint.ofsx, CharacterDB.victoryRushIconPoint.ofsy)
     end
 end
 
@@ -214,7 +241,8 @@ function wba:ShowOrHideBloodsurgeIcon()
     end
     if wba:IsActive(bloodsurgeName.."!") and IsUsableSpell(bloodsurgeName) then
         bloodsurgeIconFrame:Show()
-        return
+    else
+        bloodsurgeIconFrame:Hide() 
     end
 end
 
@@ -297,6 +325,19 @@ function wba:ShowOrHideBerserkerRageIcon()
     end
 end
 
+function wba:ShowOrHideVictoryRush()
+    local _, _, classId = UnitClass("player")
+    if classId ~= 1 then
+        victoryRushIconFrame:Hide()
+        return
+    end
+    if IsUsableSpell(victoryRushName) then
+        victoryRushIconFrame:Show()
+    else
+        victoryRushIconFrame:Hide()
+    end
+end
+
 local unitPowerFreqFrame = CreateFrame("Frame", "unitPowerFreqFrame")
 unitPowerFreqFrame:RegisterEvent("UNIT_POWER_FREQUENT")
 unitPowerFreqFrame:SetScript("OnEvent", function(self, event, ...) wba[event](wba, ...) end)
@@ -307,6 +348,7 @@ function wba:UNIT_POWER_FREQUENT(unit, type)
         wba:ShowOrHideBerserkerRageIcon()
         wba:ShowOrHideBattleShoutIcon()
         wba:ShowOrHideBloodsurgeIcon()
+        wba:ShowOrHideVictoryRush()
     end
 end
 
@@ -319,6 +361,7 @@ function wba:UNIT_COMBAT()
     wba:ShowOrHideBattleShoutIcon()
     wba:ShowOrHideBloodrageIcon()
     wba:ShowOrHideBerserkerRageIcon()
+    wba:ShowOrHideVictoryRush()
 end
 
 local combatEndedFrame = CreateFrame("Frame", "combatEnded")
@@ -353,6 +396,11 @@ function wba:Save()
     CharacterDB.berserkerRageIconPoint.ofsx = ofsx
     CharacterDB.berserkerRageIconPoint.ofsy = ofsy
 
+    point, _, _, ofsx, ofsy = victoryRushIconFrame:GetPoint()
+    CharacterDB.victoryRushIconPoint.point = point
+    CharacterDB.victoryRushIconPoint.ofsx = ofsx
+    CharacterDB.victoryRushIconPoint.ofsy = ofsy
+
     CharacterDB.saveOnLogOff = saveOnLogOff
 end
 
@@ -361,6 +409,7 @@ function wba:ShowAllIcons()
     battleShoutIconFrame:Show()
     bloodrageIconFrame:Show()
     berserkerRageIconFrame:Show()
+    victoryRushIconFrame:Show()
 end
 
 function wba:HideAllIcons()
@@ -368,6 +417,7 @@ function wba:HideAllIcons()
     battleShoutIconFrame:Hide()
     bloodrageIconFrame:Hide()
     berserkerRageIconFrame:Hide()
+    victoryRushIconFrame:Hide()
 end
 
 function wba:Unlock()
@@ -428,26 +478,74 @@ function wba:Unlock()
             self.isMoving = false;
         end
     end)
+    victoryRushIconFrame:SetMovable(true)
+    victoryRushIconFrame:EnableMouse(true)
+    victoryRushIconFrame:SetScript("OnMouseDown", function(self, button)
+        if button == "LeftButton" and not self.isMoving then
+            self:StartMoving();
+            self.isMoving = true;
+        end
+    end)
+    victoryRushIconFrame:SetScript("OnMouseUp", function(self, button)
+        if button == "LeftButton" and self.isMoving then
+            self:StopMovingOrSizing();
+            self.isMoving = false;
+        end
+    end)
 end
 
 function wba:Lock()
     wba:HideAllIcons()
     bloodsurgeIconFrame:SetMovable(false)
     bloodsurgeIconFrame:EnableMouse(false)
-    bloodsurgeIconFrame:SetScript("OnMouseDown", nil)
     bloodsurgeIconFrame:SetScript("OnMouseUp", nil)
+    bloodsurgeIconFrame:SetScript("OnMouseDown", nil)
+    bloodsurgeIconFrame:SetScript("OnMouseDown", function (self, button)
+        if button=='RightButton' then
+            victoryRushIconFrame:Hide()
+        end
+    end)
+    
     battleShoutIconFrame:SetMovable(false)
     battleShoutIconFrame:EnableMouse(false)
-    battleShoutIconFrame:SetScript("OnMouseDown", nil)
     battleShoutIconFrame:SetScript("OnMouseUp", nil)
+    battleShoutIconFrame:SetScript("OnMouseDown", nil)
+    battleShoutIconFrame:SetScript("OnMouseDown", function (self, button)
+        if button=='RightButton' then
+            victoryRushIconFrame:Hide()
+        end
+    end)
+
     bloodrageIconFrame:SetMovable(false)
     bloodrageIconFrame:EnableMouse(false)
-    bloodrageIconFrame:SetScript("OnMouseDown", nil)
     bloodrageIconFrame:SetScript("OnMouseUp", nil)
+    bloodrageIconFrame:SetScript("OnMouseDown", nil)
+    bloodrageIconFrame:SetScript("OnMouseDown", function (self, button)
+        if button=='RightButton' then
+            victoryRushIconFrame:Hide()
+        end
+    end)
+
     berserkerRageIconFrame:SetMovable(false)
     berserkerRageIconFrame:EnableMouse(false)
-    berserkerRageIconFrame:SetScript("OnMouseDown", nil)
     berserkerRageIconFrame:SetScript("OnMouseUp", nil)
+    berserkerRageIconFrame:SetScript("OnMouseDown", nil)
+    berserkerRageIconFrame:SetScript("OnMouseDown", function (self, button)
+        if button=='RightButton' then
+            victoryRushIconFrame:Hide()
+        end
+    end)
+
+    victoryRushIconFrame:SetMovable(false)
+    victoryRushIconFrame:EnableMouse(false)
+    victoryRushIconFrame:SetScript("OnMouseUp", nil)
+    victoryRushIconFrame:SetScript("OnMouseDown", nil)
+    victoryRushIconFrame:SetScript("OnMouseDown", function (self, button)
+        if button=='RightButton' then
+            victoryRushIconFrame:Hide()
+        end
+    end)
+    
 end
 
 function wba:Reset()
