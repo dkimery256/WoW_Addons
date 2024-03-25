@@ -4,6 +4,7 @@
         "SlashCmdList",
         "TargetFrameTextureFrame",
         "TargetFrameHealthBarText",
-        "TargetFrameHealthBar"
+        "TargetFrameHealthBar",
+        "UnitBuff"
     ]
 }

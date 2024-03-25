@@ -32,102 +32,17 @@ addonLoadedFrame:SetScript('OnEvent', function(self, event, ...) wba[event](wba,
 function wba:ADDON_LOADED(name)
     if name == addonName then
         wba:SetDefaults()
-       
-        bloodsurgeName, bloodsurgeId = GetTalentInfo(2,23)
-        bloodsurgeName = "Slam" -- Talent Name differs from Skill it effects
-        bloodsurgeIconFrame:Hide()
-        bloodsurgeIconFrame:SetFrameStrata("BACKGROUND")
-        bloodsurgeIconFrame:SetParent(UIParent)
-        bloodsurgeIconFrame:SetHeight(50)
-        bloodsurgeIconFrame:SetWidth(50)
-        bloodsurgeIconFrame:EnableMouse(true)
-        bloodsurgeIconFrame:SetPoint(CharacterDB.bloodsurgeIconPoint.point, UIParent, CharacterDB.bloodsurgeIconPoint.ofsx, CharacterDB.bloodsurgeIconPoint.ofsy)
-        bloodsurgeIconFrame.icon = bloodsurgeIconFrame:CreateTexture(nil, "ARTWORK")
-        bloodsurgeIconFrame.icon:SetAllPoints(true)
-        bloodsurgeIconFrame.icon:SetTexture(bloodsurgeId)
-        bloodsurgeIconFrame:SetScript("OnMouseDown", function (self, button)
-            if button=='RightButton' then
-                bloodsurgeIconFrame:Hide()
-            end
-        end)
-
-        battleShoutName, _, battleShoutIconId = GetSpellInfo("Battle Shout")
-        battleShoutIconFrame:Hide()
-        battleShoutIconFrame:SetFrameStrata("BACKGROUND")
-        battleShoutIconFrame:SetParent(UIParent)
-        battleShoutIconFrame:SetHeight(50)
-        battleShoutIconFrame:SetWidth(50)
-        battleShoutIconFrame:EnableMouse(true)
-        battleShoutIconFrame:SetPoint(CharacterDB.battleShoutIconPoint.point, UIParent, CharacterDB.battleShoutIconPoint.ofsx, CharacterDB.battleShoutIconPoint.ofsy)
-        battleShoutIconFrame.icon = battleShoutIconFrame:CreateTexture(nil, "ARTWORK")
-        battleShoutIconFrame.icon:SetAllPoints(true)
-        battleShoutIconFrame.icon:SetTexture(battleShoutIconId)
-        battleShoutIconFrame:SetScript("OnMouseDown", function (self, button)
-            if button=='RightButton' then
-                battleShoutIconFrame:Hide()
-            end
-        end)
-
-        bloodrageName, _, bloodrageIconId = GetSpellInfo("Bloodrage")
-        bloodrageIconFrame:Hide()
-        bloodrageIconFrame:SetFrameStrata("BACKGROUND")
-        bloodrageIconFrame:SetParent(UIParent)
-        bloodrageIconFrame:SetHeight(50)
-        bloodrageIconFrame:SetWidth(50)
-        bloodrageIconFrame:EnableMouse(true)
-        bloodrageIconFrame:SetPoint(CharacterDB.bloodrageIconPoint.point, UIParent, CharacterDB.bloodrageIconPoint.ofsx, CharacterDB.bloodrageIconPoint.ofsy)
-        bloodrageIconFrame.icon = bloodrageIconFrame:CreateTexture(nil, "ARTWORK")
-        bloodrageIconFrame.icon:SetAllPoints(true)
-        bloodrageIconFrame.icon:SetTexture(bloodrageIconId)
-        bloodrageIconFrame:SetScript("OnMouseDown", function (self, button)
-            if button=='RightButton' then
-                bloodrageIconFrame:Hide()
-            end
-        end)
-
-        berserkerRageName, _, berserkerRageIconId = GetSpellInfo("Berserker Rage")
-        berserkerRageIconFrame:Hide()
-        berserkerRageIconFrame:SetFrameStrata("BACKGROUND")
-        berserkerRageIconFrame:SetParent(UIParent)
-        berserkerRageIconFrame:SetHeight(50)
-        berserkerRageIconFrame:SetWidth(50)
-        berserkerRageIconFrame:EnableMouse(true)
-        berserkerRageIconFrame:SetPoint(CharacterDB.berserkerRageIconPoint.point, UIParent, CharacterDB.berserkerRageIconPoint.ofsx, CharacterDB.berserkerRageIconPoint.ofsy)
-        berserkerRageIconFrame.icon = berserkerRageIconFrame:CreateTexture(nil, "ARTWORK")
-        berserkerRageIconFrame.icon:SetAllPoints(true)
-        berserkerRageIconFrame.icon:SetTexture(berserkerRageIconId)
-        berserkerRageIconFrame:SetScript("OnMouseDown", function (self, button)
-            if button=='RightButton' then
-                berserkerRageIconFrame:Hide()
-            end
-        end)
-
-        victoryRushName, _, victoryRushIconId = GetSpellInfo("Victory Rush")
-        victoryRushIconFrame:Hide()
-        victoryRushIconFrame:SetFrameStrata("BACKGROUND")
-        victoryRushIconFrame:SetParent(UIParent)
-        victoryRushIconFrame:SetHeight(50)
-        victoryRushIconFrame:SetWidth(50)
-        victoryRushIconFrame:EnableMouse(true)
-        victoryRushIconFrame:SetPoint(CharacterDB.victoryRushIconPoint.point, UIParent, CharacterDB.victoryRushIconPoint.ofsx, CharacterDB.victoryRushIconPoint.ofsy)
-        victoryRushIconFrame.icon = victoryRushIconFrame:CreateTexture(nil, "ARTWORK")
-        victoryRushIconFrame.icon:SetAllPoints(true)
-        victoryRushIconFrame.icon:SetTexture(victoryRushIconId)
-        victoryRushIconFrame:SetScript("OnMouseDown", function (self, button)
-            if button=='RightButton' then
-                victoryRushIconFrame:Hide()
-            end
-        end)
+        print("Warrior Buffs Loaded")
     end
 end
 
-local loginFrame = CreateFrame("Frame")
+--[[local loginFrame = CreateFrame("Frame")
 loginFrame:RegisterEvent("PLAYER_LOGIN")
 loginFrame:SetScript('OnEvent', function(self, event, ...) wba[event](wba, ...) end)
 
 function wba:PLAYER_LOGIN()
     wba:SetDefaults()
-end
+end--]]
 
 local logoutFrame = CreateFrame("Frame")
 logoutFrame:RegisterEvent("PLAYER_LOGOUT")
@@ -171,6 +86,93 @@ function wba:SetDefaults(reset)
     else
         saveOnLogOff = CharacterDB.saveOnLogOff
     end
+
+    bloodsurgeName, bloodsurgeId = GetTalentInfo(2,23)
+    bloodsurgeName = "Slam" -- Talent Name differs from Skill it effects
+    bloodsurgeIconFrame:Hide()
+    bloodsurgeIconFrame:SetFrameStrata("BACKGROUND")
+    bloodsurgeIconFrame:SetParent(UIParent)
+    bloodsurgeIconFrame:SetHeight(50)
+    bloodsurgeIconFrame:SetWidth(50)
+    bloodsurgeIconFrame:EnableMouse(true)
+    bloodsurgeIconFrame:SetPoint(CharacterDB.bloodsurgeIconPoint.point, UIParent, CharacterDB.bloodsurgeIconPoint.ofsx, CharacterDB.bloodsurgeIconPoint.ofsy)
+    bloodsurgeIconFrame.icon = bloodsurgeIconFrame:CreateTexture(nil, "ARTWORK")
+    bloodsurgeIconFrame.icon:SetAllPoints(true)
+    bloodsurgeIconFrame.icon:SetTexture(bloodsurgeId)
+    bloodsurgeIconFrame:SetScript("OnMouseDown", function (self, button)
+        if button=='RightButton' then
+            bloodsurgeIconFrame:Hide()
+        end
+    end)
+
+    battleShoutName, _, battleShoutIconId = GetSpellInfo("Battle Shout")
+    battleShoutIconFrame:Hide()
+    battleShoutIconFrame:SetFrameStrata("BACKGROUND")
+    battleShoutIconFrame:SetParent(UIParent)
+    battleShoutIconFrame:SetHeight(50)
+    battleShoutIconFrame:SetWidth(50)
+    battleShoutIconFrame:EnableMouse(true)
+    battleShoutIconFrame:SetPoint(CharacterDB.battleShoutIconPoint.point, UIParent, CharacterDB.battleShoutIconPoint.ofsx, CharacterDB.battleShoutIconPoint.ofsy)
+    battleShoutIconFrame.icon = battleShoutIconFrame:CreateTexture(nil, "ARTWORK")
+    battleShoutIconFrame.icon:SetAllPoints(true)
+    battleShoutIconFrame.icon:SetTexture(battleShoutIconId)
+    battleShoutIconFrame:SetScript("OnMouseDown", function (self, button)
+        if button=='RightButton' then
+            battleShoutIconFrame:Hide()
+        end
+    end)
+
+    bloodrageName, _, bloodrageIconId = GetSpellInfo("Bloodrage")
+    bloodrageIconFrame:Hide()
+    bloodrageIconFrame:SetFrameStrata("BACKGROUND")
+    bloodrageIconFrame:SetParent(UIParent)
+    bloodrageIconFrame:SetHeight(50)
+    bloodrageIconFrame:SetWidth(50)
+    bloodrageIconFrame:EnableMouse(true)
+    bloodrageIconFrame:SetPoint(CharacterDB.bloodrageIconPoint.point, UIParent, CharacterDB.bloodrageIconPoint.ofsx, CharacterDB.bloodrageIconPoint.ofsy)
+    bloodrageIconFrame.icon = bloodrageIconFrame:CreateTexture(nil, "ARTWORK")
+    bloodrageIconFrame.icon:SetAllPoints(true)
+    bloodrageIconFrame.icon:SetTexture(bloodrageIconId)
+    bloodrageIconFrame:SetScript("OnMouseDown", function (self, button)
+        if button=='RightButton' then
+            bloodrageIconFrame:Hide()
+        end
+    end)
+
+    berserkerRageName, _, berserkerRageIconId = GetSpellInfo("Berserker Rage")
+    berserkerRageIconFrame:Hide()
+    berserkerRageIconFrame:SetFrameStrata("BACKGROUND")
+    berserkerRageIconFrame:SetParent(UIParent)
+    berserkerRageIconFrame:SetHeight(50)
+    berserkerRageIconFrame:SetWidth(50)
+    berserkerRageIconFrame:EnableMouse(true)
+    berserkerRageIconFrame:SetPoint(CharacterDB.berserkerRageIconPoint.point, UIParent, CharacterDB.berserkerRageIconPoint.ofsx, CharacterDB.berserkerRageIconPoint.ofsy)
+    berserkerRageIconFrame.icon = berserkerRageIconFrame:CreateTexture(nil, "ARTWORK")
+    berserkerRageIconFrame.icon:SetAllPoints(true)
+    berserkerRageIconFrame.icon:SetTexture(berserkerRageIconId)
+    berserkerRageIconFrame:SetScript("OnMouseDown", function (self, button)
+        if button=='RightButton' then
+            berserkerRageIconFrame:Hide()
+        end
+    end)
+
+    victoryRushName, _, victoryRushIconId = GetSpellInfo("Victory Rush")
+    victoryRushIconFrame:Hide()
+    victoryRushIconFrame:SetFrameStrata("BACKGROUND")
+    victoryRushIconFrame:SetParent(UIParent)
+    victoryRushIconFrame:SetHeight(50)
+    victoryRushIconFrame:SetWidth(50)
+    victoryRushIconFrame:EnableMouse(true)
+    victoryRushIconFrame:SetPoint(CharacterDB.victoryRushIconPoint.point, UIParent, CharacterDB.victoryRushIconPoint.ofsx, CharacterDB.victoryRushIconPoint.ofsy)
+    victoryRushIconFrame.icon = victoryRushIconFrame:CreateTexture(nil, "ARTWORK")
+    victoryRushIconFrame.icon:SetAllPoints(true)
+    victoryRushIconFrame.icon:SetTexture(victoryRushIconId)
+    victoryRushIconFrame:SetScript("OnMouseDown", function (self, button)
+        if button=='RightButton' then
+            victoryRushIconFrame:Hide()
+        end
+    end)
+
     if reset then
         bloodsurgeIconFrame:SetPoint(CharacterDB.bloodsurgeIconPoint.point, UIParent, CharacterDB.bloodsurgeIconPoint.ofsx, CharacterDB.bloodsurgeIconPoint.ofsy)
         battleShoutIconFrame:SetPoint(CharacterDB.battleShoutIconPoint.point, UIParent, CharacterDB.battleShoutIconPoint.ofsx, CharacterDB.battleShoutIconPoint.ofsy)

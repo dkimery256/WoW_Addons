@@ -2,7 +2,7 @@
 ## Notes: See all your Equipment Durability Stats
 ## Version: 1.0
 ## Author: David
-## Interface: 30400
+## Interface: 11501
 
 math_helper.lua
 Inventory.lua
